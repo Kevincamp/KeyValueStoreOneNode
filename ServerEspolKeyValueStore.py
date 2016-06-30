@@ -2,11 +2,25 @@
 # coding=utf-8                   #This is server.py file
 
 import socket                   #Import socket module
+from multiprocessing.dummy import Pool as ThreadPool #Import tread pool
+import mainThread
 
-def aTrabajarHilos(socket):  #funcion que verifica si hay un hilo que no este escuchando ningun socket y lo pone a trabajar(se lo pasa)
+#Globals (Start with capital letter)
+Pool = []
+
+def aTrabajarHilos(socket):  #Verifica cada hilo, si el hilo que esta escuchando no tiene socket y lo pone a trabajar(se lo pasa)
     pass
 def inicializarHilos(numeroHilos):
+    for i in range(numeroHilos):
+        thread = mainThread()
+        thread.start()
+        Pool.append(thread)
+    createDictionary()
     pass
+
+
+def createDictionary():
+    dictionary = dict([(clientSocket,),(threadClient,)])
 
 s = socket.socket()               #Se crea el objeto socket
 host = socket.gethostname()     #Se obtiene el hostname de la máquina
@@ -16,7 +30,8 @@ s.settimeout(10)
 s.listen(5)
 queue = []
 cache = {}
-listaHilos=inicializarHilos(5); 
+inicializarHilos(5); 
+print Pool
 while True:
     try:
         c,addr = s.accept()
