@@ -2,19 +2,15 @@ import threading
 from time import sleep
 
 class MainThread(threading.Thread):
-	def __init__(self, command):
+	cache = None # variable de clase
+	def __init__(self):
 		threading.Thread.__init__(self)
-		self.command = command
+		self.clientSocket = None #variable de instancia
+		
 
 	def run(self):
-		if self.command != "":
-			print "El comando es: " + self.command
+		if self.clientSocket is not None
+			print "aqui va un receive y tons of code"
 		else:
-			sleep(5)
+			sleep(0)
 		
-comandos = ["del -a","add b", ""]
-for comando in comandos:
-	t = MainThread(comando)
-	t.start()
-	t.join()
-	print "Fin"

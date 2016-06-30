@@ -3,29 +3,29 @@
 
 import socket                   #Import socket module
 
-s=socket.socket()               #Se crea el objeto socket
+def aTrabajarHilos(socket):  #funcion que verifica si hay un hilo que no este escuchando ningun socket y lo pone a trabajar(se lo pasa)
+    pass
+def inicializarHilos(numeroHilos):
+    pass
+
+s = socket.socket()               #Se crea el objeto socket
 host = socket.gethostname()     #Se obtiene el hostname de la máquina
 port = 12345
-s.bind((host,port))             #Bind to the port
-s.settimeout(None)
-s.listen(5)                     # Espera por la conexión del cliente. Numero de clientes que puede aceptar
-c,addr = s.accept()
-
+s.bind(('',port))             #Bind to the port
+s.settimeout(10)
+s.listen(5)
+queue = []
+cache = {}
+listaHilos=inicializarHilos(5); 
 while True:
-    # Se establece la conexión con el cliente
-    print 'Conexión de:', addr
-    entranc = c.recv(1024)
-    tempCKV = entranc.split(' ')
-    command = tempCKV[0]
-    key = tempCKV[1]
-    value = tempCKV [2]
+    try:
+        c,addr = s.accept()
+        queue.append(c)
+    except socket.timeout:
+        continue
+    if len(queue) > 0:
+        clientSocket = queue.pop(0)
+        aTrabajarHilos()
 
-    if command == "exit":
-        c.close()
-    elif command == "list":
-        c.send('Me llego este comando:'+ command)
-        entranc=" "
-    else:
-        c.send('Me llego este comando:' + command +' ' + key+ ' ' + value)
-        entranc = " "
+
 

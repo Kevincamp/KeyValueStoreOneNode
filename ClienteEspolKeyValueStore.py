@@ -4,7 +4,7 @@ import sys
 import re
 import socket
 
-s = socket.socket()
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 def main():
     if len(sys.argv) != 3:
@@ -15,7 +15,6 @@ def main():
              # Create a socket object
     exflag = True
     s.connect((host, port))
-    #print s.recv(1024)
     while exflag:
         exflag = requestInput();
     sys.exit(0)
@@ -27,14 +26,10 @@ def requestInput():
     patron = re.compile(regex)
     m = patron.match(entry)
     if m is not None:
-        #print m.group(1)
-        #print m.group(2)
-        #print m.group(3)
         instruccion = str(m.group(1)).lower()
         clave = str(m.group(2))
         valor = str(m.group(3))
         #inslen = len(m.groups())
-        #print inslen
         if instruccion == "exit" and clave == "" and valor == "":
             s.close()
             print "Cerrando la conexión..."
