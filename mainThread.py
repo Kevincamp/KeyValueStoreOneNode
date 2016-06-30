@@ -13,4 +13,6 @@ class MainThread(threading.Thread):
 			print "aqui va un receive y tons of code"
 		else:
 			sleep(0)
-		
+	
+	def setClientSocket(self,s):
+		self.clientSocket = s
