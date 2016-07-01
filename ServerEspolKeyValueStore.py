@@ -2,25 +2,24 @@
 # coding=utf-8                   #This is server.py file
 
 import socket                   #Import socket module
-from multiprocessing.dummy import Pool as ThreadPool #Import tread pool
-import mainThread
+from mainThread import MainThread
 
-#Globals (Start with capital letter)
-Pool = []
 
-def aTrabajarHilos(socket):  #Verifica cada hilo, si el hilo que esta escuchando no tiene socket y lo pone a trabajar(se lo pasa)
-    pass
-def inicializarHilos(numeroHilos):
-    for i in range(numeroHilos):
-        thread = mainThread()
+
+def loadWork(spool,socketclt):  #Verifica cada hilo, si el hilo que esta escuchando no tiene socket y lo pone a trabajar(se lo pasa)
+    for index,the_thread in enumerate(spool):
+        if the_thread.getClientSocket() is None:
+            the_thread.setClientSocket(socketclt)
+            return True
+    return False
+# inicializa los hilos y los mete un pool(lista)        
+def initThreads(pool,threadNumber):
+    for i in range(threadNumber):
+        thread = MainThread()
         thread.start()
-        Pool.append(thread)
-    createDictionary()
-    pass
+        pool.append(thread)
 
 
-def createDictionary():
-    dictionary = dict([(clientSocket,),(threadClient,)])
 
 s = socket.socket()               #Se crea el objeto socket
 host = socket.gethostname()     #Se obtiene el hostname de la máquina
@@ -29,18 +28,20 @@ s.bind(('',port))             #Bind to the port
 s.settimeout(10)
 s.listen(5)
 queue = []
-cache = {}
-inicializarHilos(5); 
-print Pool
+pool = []
+initThreads(pool,2);
 while True:
     try:
-        c,addr = s.accept()
-        queue.append(c)
+        c,addr = s.accept() # se recepta una conexion
+        queue.append(c) # se ingresa el socket a la cola de clientes por atender
     except socket.timeout:
         continue
-    if len(queue) > 0:
+    if len(queue) > 0: #verifico si existen clientes pendientes en la cola
         clientSocket = queue.pop(0)
-        aTrabajarHilos()
+        if not loadWork(pool,clientSocket): # si no se logra atender a un cliente
+            queue.insert(0, clientSocket) # el cliente vuelve al inicio de la cola
+        else
+            print "los hilos estan ocupados" # bloque de prueba
 
 
 

@@ -1,18 +1,26 @@
 import threading
 from time import sleep
+import socket
 
 class MainThread(threading.Thread):
-	cache = None # variable de clase
+	cache = {} # variable de clase
 	def __init__(self):
 		threading.Thread.__init__(self)
 		self.clientSocket = None #variable de instancia
 		
 
 	def run(self):
-		if self.clientSocket is not None
-			print "aqui va un receive y tons of code"
-		else:
-			sleep(0)
+		while True:
+			if self.clientSocket is not None:
+				print self.clientSocket.getpeername() #codigo para probar
+				sleep(60)
+			else:
+				#print "entro"
+				sleep(1)
+
 	
 	def setClientSocket(self,s):
 		self.clientSocket = s
+
+	def getClientSocket(self):
+		return self.clientSocket

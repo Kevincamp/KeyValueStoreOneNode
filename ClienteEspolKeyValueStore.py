@@ -43,19 +43,19 @@ def requestInput():
             print "help: Muestra la lista de los comandos soportados, incluyendo una breve explicación de los mismos"
         elif instruccion == "get" and clave != "" and valor == "":
             s.send(instruccion+' '+clave+' '+' ')
-            print s.recv(1024)
+            #print s.recv(1024)
             pass
         elif instruccion == "del" and clave != "" and valor == "":
             s.send(instruccion+' '+clave+' '+valor)
-            print s.recv(1024)
+            #print s.recv(1024)
             pass
         elif instruccion == "set" and clave != "" and valor != "":
             s.send(instruccion+' '+clave+' '+valor)
-            print s.recv(1024)
+            #print s.recv(1024)
             pass
         elif instruccion == "list" and clave == "" and valor == "":
             s.send(instruccion+ ' ' + ' ')
-            print s.recv(1024)
+            #print s.recv(1024)
             pass
         else:
             print "ERROR: la instrucción dada no es válida"
