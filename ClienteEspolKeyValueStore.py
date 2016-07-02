@@ -42,8 +42,8 @@ def requestInput():
             print "exit: Cierra la conexión con el servidor y termina la ejecución del programa"
             print "help: Muestra la lista de los comandos soportados, incluyendo una breve explicación de los mismos"
         elif instruccion == "get" and clave != "" and valor == "":
-            s.send(instruccion+' '+clave + ' ' + ' ')
-            print s.recv(2)
+            s.send(instruccion+' '+clave+' '+' ')
+            print s.recv(4096)
             pass
         elif instruccion == "del" and clave != "" and valor == "":
             s.send(instruccion+' '+clave+' '+valor)
@@ -51,7 +51,7 @@ def requestInput():
             pass
         elif instruccion == "set" and clave != "" and valor != "":
             s.send(instruccion+' '+clave+' '+valor)
-            print s.recv(1024)
+            print s.recv(4096)
             pass
         elif instruccion == "list" and clave == "" and valor == "":
             s.send(instruccion+ ' ' + ' ')

@@ -32,17 +32,20 @@ class MainThread(threading.Thread):
 
     def getDictValue(self,key):
       res = ""
-      if key in self.cache:
-        res = self.cache[key]
-      else:
-        res = 'NaN'
+      for self.key in self.cache.keys():
+        if key == self.key:
+            res = self.cache[self.key]
+        break
       return res
-    
-    def listCache(self,cache):
-      return cache
+
+    def getDict(self):
+        res = ""
+        for self.key in self.cache.keys():
+            res += self.key +"->"+self.cache[self.key]+"\n"
+        return res
 
     def comando(self,s):
-        com = s.recv(1024)
+        com = s.recv(4096)
         tempComando = com.split(' ')
         cmd=tempComando[0]
         key = tempComando[1]
@@ -53,4 +56,7 @@ class MainThread(threading.Thread):
             s.send(res)
         elif cmd == 'get':
             res = self.getDictValue(key)
+            s.send(res)
+        elif cmd == 'list':
+            res = self.getDict()
             s.send(res)
