@@ -7,7 +7,7 @@ from mainThread import MainThread
 def loadWork(spool,socketclt):  #Verifica cada hilo, si el hilo que esta escuchando no tiene socket y lo pone a trabajar(se lo pasa)
     for index,the_thread in enumerate(spool):
         if the_thread.getClientSocket() is None:
-            the_thread.setClientSocket(socketclt)dal
+            the_thread.setClientSocket(socketclt)
             return True
     return False
 
