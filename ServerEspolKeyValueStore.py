@@ -19,8 +19,6 @@ def initThreads(pool,threadNumber):
         thread.start()
         pool.append(thread)
 
-
-
 s = socket.socket()               #Se crea el objeto socket
 host = socket.gethostname()     #Se obtiene el hostname de la máquina
 port = 12345
