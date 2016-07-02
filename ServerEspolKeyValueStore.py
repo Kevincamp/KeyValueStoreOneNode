@@ -3,6 +3,12 @@
 
 import socket                   #Import socket module
 from mainThread import MainThread
+import signal
+import sys		#For shut down server
+
+def signal_handler(signal, frame):
+	print('Crl+C!')
+	sys.exit(0)
 
 def loadWork(spool,socketclt):  #Verifica cada hilo, si el hilo que esta escuchando no tiene socket y lo pone a trabajar(se lo pasa)
     for index,the_thread in enumerate(spool):
@@ -39,6 +45,8 @@ while True:
             queue.insert(0, clientSocket) # el cliente vuelve al inicio de la cola
         else:
             print "los hilos estan ocupados" # bloque de prueba
+	signal.signal(signal.SIGINT, signal_handler)
+	signal.pause()
 
 
 
