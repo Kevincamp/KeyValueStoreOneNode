@@ -47,7 +47,7 @@ def requestInput():
             pass
         elif instruccion == "del" and clave != "" and valor == "":
             s.send(instruccion+' '+clave+' '+valor)
-            #print s.recv(1024)
+            print s.recv(1024)
             pass
         elif instruccion == "set" and clave != "" and valor != "":
             s.send(instruccion+' '+clave+' '+valor)

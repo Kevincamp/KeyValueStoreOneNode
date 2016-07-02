@@ -25,10 +25,24 @@ class MainThread(threading.Thread):
     def getClientSocket(self):
         return self.clientSocket
 
+    #Funcion que ejecuta el comando "set"
     def setDict(self,key,value):
-        self.cache[key]=value
+        if key in self.cache:
+            self.cache[key] = value
+        else:
+            self.cache[key] = value
         res = 'OK'
         return res
+
+    #Funcion que ejecuta el comando "del"
+    def delDict(self,key):
+        if key in self.cache:
+            del self.cache[key]
+            res='Elemento eliminado'
+        else:
+            res='ERROR: No existe un valor asociado a esa clave en el diccionario'
+        return res
+
 
     def getDictValue(self,key):
       res = ""
@@ -57,6 +71,11 @@ class MainThread(threading.Thread):
         elif cmd == 'get':
             res = self.getDictValue(key)
             s.send(res)
+<<<<<<< HEAD
         elif cmd == 'list':
             res = self.getDict()
+=======
+        elif cmd=='del':
+            res=self.delDict(key)
+>>>>>>> 8917f9aaa0091a783579a8750e7e1db41a9b3a2a
             s.send(res)
