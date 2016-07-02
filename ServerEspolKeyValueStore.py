@@ -4,15 +4,14 @@
 import socket                   #Import socket module
 from mainThread import MainThread
 
-
-
 def loadWork(spool,socketclt):  #Verifica cada hilo, si el hilo que esta escuchando no tiene socket y lo pone a trabajar(se lo pasa)
     for index,the_thread in enumerate(spool):
         if the_thread.getClientSocket() is None:
             the_thread.setClientSocket(socketclt)
             return True
     return False
-# inicializa los hilos y los mete un pool(lista)        
+
+# inicializa los hilos y los mete un pool(lista)
 def initThreads(pool,threadNumber):
     for i in range(threadNumber):
         thread = MainThread()
@@ -38,7 +37,7 @@ while True:
         clientSocket = queue.pop(0)
         if not loadWork(pool,clientSocket): # si no se logra atender a un cliente
             queue.insert(0, clientSocket) # el cliente vuelve al inicio de la cola
-        else
+        else:
             print "los hilos estan ocupados" # bloque de prueba
 
 
