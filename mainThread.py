@@ -13,6 +13,7 @@ class MainThread(threading.Thread):
         while True:
             if self.clientSocket is not None:
                 print self.clientSocket.getpeername() #codigo para probar
+                self.comando(self.clientSocket)
                 sleep(60)
             else:
                 #print "entro"
@@ -25,25 +26,20 @@ class MainThread(threading.Thread):
         return self.clientSocket
 
     def setDict(self,key,value):
-        res = ''
-        if key in self.cache:
-            self.cache=self.cache.update(self.cache)
-        else:
-            self.cache[self.key]=value
-        self.res = 'OK'
-
+        self.cache[key]=value
+        res = 'OK'
         return res
 
     def comando(self,s):
         com = s.recv(1024)
-        tempComando = com.split('')
+        tempComando = com.split(' ')
         cmd=tempComando[0]
         key = tempComando[1]
         value = tempComando[2]
 
         if cmd=='set':
-            #res = self.setDict(key,value)
-            get.send('El comando q se envio' + cmd + key + value)
+            res = self.setDict(key,value)
+            s.send(res)
 
 
     # def getValue(self, key,cache):
