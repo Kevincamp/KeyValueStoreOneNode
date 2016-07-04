@@ -29,8 +29,13 @@ def requestInput():
 		instruccion = str(m.group(1)).lower()
 		clave = str(m.group(2))
 		valor = str(m.group(3))
-		#inslen = len(m.groups())
+		if len(clave.encode('utf-8')) > 134217728 or len(valor.encode('utf-8')) > 2147483648:  #validacion del tamaño de claves y valores
+			print "La clave o el valor exceden los limites de 128 mb y 2gb respectivamente"
+			return True
+		requestlenstr = getRequesStrLen(instruccion,clave,valor)
+		s.send(requestlenstr) # se envia el tamaño de la cadena a enviar
 		if instruccion == "exit" and clave == "" and valor == "":
+
 			s.send("exit")
 			s.close()
 			print "Cerrando la conexión..."
@@ -43,24 +48,31 @@ def requestInput():
 			print "exit: Cierra la conexión con el servidor y termina la ejecución del programa"
 			print "help: Muestra la lista de los comandos soportados, incluyendo una breve explicación de los mismos"
 		elif instruccion == "get" and clave != "" and valor == "":
-			#s.send(instruccion+' '+clave+' '+' ')
-			s.send(str(entry))
-			print s.recv(4096)
+			s.send(instruccion+' '+clave)
+			print s.recv(2147483647)
 		elif instruccion == "del" and clave != "" and valor == "":
-			s.send(instruccion+' '+clave+' '+valor)
+			s.send(instruccion+' '+clave)
 			print s.recv(1024)
 		elif instruccion == "set" and clave != "" and valor != "":
 			s.send(instruccion+' '+clave+' '+valor)
 			print s.recv(4096)
 		elif instruccion == "list" and clave == "" and valor == "":
-			s.send(entry)
-			print s.recv(4096)
+			s.send(instruccion)
+			print s.recv(2147483647)
 		else:
 			print "ERROR: la instrucción dada no es válida"
 
 	else:
 		print "ERROR: la instrucción dada no es válida"
 	return True
+
+
+def getRequesStrLen(instruccion,clave,valor):
+	longitud = str(len(clave.encode('utf-8')) + len(valor.encode('utf-8')) + len(instruccion.encode('utf-8')) + 2)
+	while len(longitud) < 10:
+		longitud = "0" + longitud
+	#print longitud
+	return longitud
 
 if __name__ == "__main__":
 	main()

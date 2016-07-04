@@ -21,10 +21,10 @@ class MainThread(threading.Thread):
 	def setClientSocket(self,s):
 		self.clientSocket = s
 		self.clientSocket.settimeout(5)
-		try:
+		try:	# Si aun se encuentra esperando se lo atiende
 			self.clientSocket.send("ok")
 			self.clientSocket.settimeout(None)
-		except socket.timeout:
+		except socket.timeout: # caso contrario se lo descarta
 			self.clientSocket.close()
 			self.clientSocket = None	
 		
@@ -74,28 +74,55 @@ class MainThread(threading.Thread):
 		return res + " "
 
 	def comando(self,s):
-		com = s.recv(4096)
+		tamMsg = s.recv(10) # se recibe el tamaño de la cadena
+		com = self.listenClient(int(tamMsg))
 		regex = "^(\S+)[ \t\r]*(\S*)[ \t\r]*([ \t\r\S]*)$"
 		patron = re.compile(regex)
 		tempComando = patron.match(com)
 		cmd = str(tempComando.group(1)).lower()
 		key = str(tempComando.group(2))
 		value = str(tempComando.group(3))
-
-		if cmd == 'set':
-			res = self.setDict(key,value)
-			s.send(res)
-		elif cmd == 'get':
-			res = self.getDictValue(key)
-			s.send(res)
-		elif cmd == 'list':
-			res = self.getDict()
-			s.send(res)
-		elif cmd =='del':
-			res=self.delDict(key)
-			s.send(res)
-		elif cmd =='exit':
+		s.settimeout(30) # valido si el cliente sigue activo
+		try:
+			if cmd == 'set':
+				res = self.setDict(key,value)
+				s.send(res)
+				s.settimeout(None) 
+			elif cmd == 'get':
+				res = self.getDictValue(key)
+				s.send(res)
+				s.settimeout(None) 
+			elif cmd == 'list':
+				res = self.getDict()
+				s.send(res)
+				s.settimeout(None) 
+			elif cmd =='del':
+				res=self.delDict(key)
+				s.send(res)
+				s.settimeout(None) 
+			elif cmd =='exit':
+				self.clientSocket.close()
+				self.clientSocket = None
+			else:
+				s.send('ERROR: Instrucción no reconocida por el servidor')
+		except socket.timeout:
 			self.clientSocket.close()
 			self.clientSocket = None
-		else:
-			s.send('ERROR: Instrucción no reconocida por el servidor')
+		# el socket vuelve a blocking state para esperar una peticion del cliente
+
+	def listenClient(self, tam):
+		cadena = ""
+		sample = 10
+		it = tam / sample
+		if tam < sample:
+			return self.clientSocket.recv(tam)
+		if it*sample < tam:
+			it = it + 1
+		#print "iteraciones: " , it
+		while(it > 0):
+			if it == 1:
+				cadena = cadena + self.clientSocket.recv(tam)
+			else:
+				cadena = cadena + self.clientSocket.recv(sample)
+			it = it - 1
+		return cadena
