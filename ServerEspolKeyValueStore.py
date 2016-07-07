@@ -26,7 +26,7 @@ s.settimeout(5)
 s.listen(5)
 queue = []
 pool = []
-initThreads(pool,10);
+initThreads(pool,20);
 while True:
 	if len(queue) > 0: #verifico si existen clientes pendientes en la cola
 		clientSocket = queue.pop(0)

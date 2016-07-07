@@ -21,7 +21,10 @@ def main():
 	sys.exit(0)
 
 def requestInput():
-	entry = str(raw_input(">> "))
+	try:
+		entry = str(raw_input(">> "))
+	except EOFError:
+		print "ERROR: se termino el buffer de entrada"
 	regex = "^(\S+)[ \t\r]*(\S*)[ \t\r]*([ \t\r\S]*)$"
 	patron = re.compile(regex)
 	m = patron.match(entry)
@@ -30,7 +33,7 @@ def requestInput():
 		clave = str(m.group(2))
 		valor = str(m.group(3))
 		if len(clave.encode('utf-8')) > 134217728 or len(valor.encode('utf-8')) > 2147483648:  #validacion del tamaño de claves y valores
-			print "La clave o el valor exceden los limites de 128 mb y 2gb respectivamente"
+			print "ERROR: La clave o el valor exceden los limites de 128 mb y 2gb respectivamente"
 			return True
 		requestlenstr = getRequesStrLen(instruccion,clave,valor)
 		s.send(requestlenstr) # se envia el tamaño de la cadena a enviar
@@ -49,7 +52,7 @@ def requestInput():
 			print "help: Muestra la lista de los comandos soportados, incluyendo una breve explicación de los mismos"
 		elif instruccion == "get" and clave != "" and valor == "":
 			s.send(instruccion+' '+clave)
-			print s.recv(2147483647)
+			print getResponseServer(s)
 		elif instruccion == "del" and clave != "" and valor == "":
 			s.send(instruccion+' '+clave)
 			print s.recv(1024)
@@ -58,7 +61,7 @@ def requestInput():
 			print s.recv(4096)
 		elif instruccion == "list" and clave == "" and valor == "":
 			s.send(instruccion)
-			print s.recv(2147483647)
+			print getResponseServer(s)
 		else:
 			print "ERROR: la instrucción dada no es válida"
 
@@ -73,6 +76,15 @@ def getRequesStrLen(instruccion,clave,valor):
 		longitud = "0" + longitud
 	#print longitud
 	return longitud
+
+
+def getResponseServer(server):
+	cadena = server.recv(1024)
+	result = ""
+	while cadena[-12:] == "$operativos$":
+		result = result + cadena[:-12]
+		cadena = server.recv(1024)
+	return result + cadena
 
 if __name__ == "__main__":
 	main()

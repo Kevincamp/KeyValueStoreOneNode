@@ -75,26 +75,33 @@ class MainThread(threading.Thread):
 
 	def comando(self,s):
 		tamMsg = s.recv(10) # se recibe el tamaño de la cadena
-		com = self.listenClient(int(tamMsg))
+		try:
+			com = self.listenClient(int(tamMsg))
+		except ValueError:
+			s.send('ERROR: Problema en el protocolo de comunicación')
+			return	
 		regex = "^(\S+)[ \t\r]*(\S*)[ \t\r]*([ \t\r\S]*)$"
 		patron = re.compile(regex)
 		tempComando = patron.match(com)
 		cmd = str(tempComando.group(1)).lower()
 		key = str(tempComando.group(2))
 		value = str(tempComando.group(3))
-		s.settimeout(30) # valido si el cliente sigue activo
+		s.settimeout(600) # valido si el cliente sigue activo
 		try:
 			if cmd == 'set':
-				res = self.setDict(key,value)
+				try:
+					res = self.setDict(key,value)
+				except MemoryError:
+					res="ERROR: El diccionario se quedo sin memoria. Use el comando 'del' para liberarla"
 				s.send(res)
 				s.settimeout(None) 
 			elif cmd == 'get':
 				res = self.getDictValue(key)
-				s.send(res)
+				self.notifyClient(res)
 				s.settimeout(None) 
 			elif cmd == 'list':
 				res = self.getDict()
-				s.send(res)
+				self.notifyClient(res)
 				s.settimeout(None) 
 			elif cmd =='del':
 				res=self.delDict(key)
@@ -112,7 +119,7 @@ class MainThread(threading.Thread):
 
 	def listenClient(self, tam):
 		cadena = ""
-		sample = 10
+		sample = 1024 * 100
 		it = tam / sample
 		if tam < sample:
 			return self.clientSocket.recv(tam)
@@ -126,3 +133,18 @@ class MainThread(threading.Thread):
 				cadena = cadena + self.clientSocket.recv(sample)
 			it = it - 1
 		return cadena
+
+	def notifyClient(self,cadena):
+		longitud = len(cadena.encode('utf-8'))
+		#separador $operativos$ -> 12 BYTES
+		sample = 1012
+		if longitud <= 1024:
+		 	self.clientSocket.send(cadena)
+		 	return
+		init = 0
+		while init < longitud:
+			chunk = cadena[init : init + sample]
+			init = init + sample
+			if init < longitud:
+				chunk = chunk + "$operativos$"
+			self.clientSocket.send(chunk)
