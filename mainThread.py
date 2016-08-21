@@ -35,7 +35,7 @@ class MainThread(threading.Thread):
 	#Funcion que ejecuta el comando "set"
 	def setDict(self,key,value): #SET
 		self.candado.acquire()
-		if key in self.cache:
+		if key in self.cache: 
 			self.cache[key] = value
 		else:
 			self.cache[key] = value
