@@ -15,7 +15,6 @@ public class ClienteEspolKeyValueStore {
 		int portNumber = Integer.parseInt(args[1]);
 
 		try (
-            System.out.println("Conectando...");
             Socket kkSocket = new Socket(hostName, portNumber);
             PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(kkSocket.getInputStream()));
