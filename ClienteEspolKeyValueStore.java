@@ -13,28 +13,29 @@ public class ClienteEspolKeyValueStore {
 		
 		String hostName = args[0];
 		int portNumber = Integer.parseInt(args[1]);
+        System.out.println("Conectando...");
 
 		try (
-            System.out.println("Conectando...");
             Socket kkSocket = new Socket(hostName, portNumber);
             PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(kkSocket.getInputStream()));
         ) {
-            System.out.println("ok");
-            System.out.println(">> ");            
+            System.out.println("Conexion establecida");
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
             String fromServer;
             String fromUser;
 
-            while ((fromServer = in.readLine()) != null) {
-                System.out.println(">> " + fromServer);
-                if (fromServer.equals("Bye"))
-                    break;
-                
+            while(true) {
+                if((fromServer = in.readLine()) != null){
+                    System.out.println("Server: "+ fromServer);
+                }
                 fromUser = stdIn.readLine();
                 if (fromUser != null) {
-                    System.out.println(">>> " + fromUser);
+                    System.out.println(">> " + fromUser);
                     out.println(fromUser);
+                    if (fromUser.equals("exit")){
+                        break;
+                    }
                 }
             }
         } catch (UnknownHostException e) {
