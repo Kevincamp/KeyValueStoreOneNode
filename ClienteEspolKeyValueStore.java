@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
 public class ClienteEspolKeyValueStore {
 
@@ -16,28 +17,33 @@ public class ClienteEspolKeyValueStore {
         System.out.println("Conectando...");
 
 		try (
-            Socket kkSocket = new Socket(hostName, portNumber);
-            PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(kkSocket.getInputStream()));
-        ) {
-            System.out.println("Conexion establecida");
-            BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-            String fromServer;
-            String fromUser;
+            Socket socket = new Socket(hostName, portNumber);
+            DataOutputStream salida = new DataOutputStream(socket.getOutputStream());
 
-            while(true) {
-                if((fromServer = in.readLine()) != null){
-                    System.out.println("Server: "+ fromServer);
-                }
-                fromUser = stdIn.readLine();
-                if (fromUser != null) {
-                    System.out.println(">> " + fromUser);
-                    out.println(fromUser);
-                    if (fromUser.equals("exit")){
-                        break;
-                    }
-                }
-            }
+            // PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            // BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        ) {
+            System.out.println("Conexion establecida"); 
+            Scanner scan = new Scanner(System.in);
+            String input = scan.nextLine();
+            salida.writeUTF(input);
+            salida.close();
+            // while(true) {
+            //     dis = new DataInputStream(socket.getInputStream);
+            //     System.out.println(dis.readUTF())
+
+            //     if((fromServer = in.readLine()) != null){
+            //         System.out.println("Server: "+ fromServer);
+            //     }
+            //     fromUser = stdIn.readLine();
+            //     if (fromUser != null) {
+            //         System.out.println(">> " + fromUser);
+            //         out.writeUTF(fromUser);
+            //         if (fromUser.equals("exit")){
+            //             break;
+            //         }
+            //     }
+            // }
         } catch (UnknownHostException e) {
             System.err.println("El host " + hostName+" no es el correcto.");
             System.exit(1);
