@@ -2,7 +2,7 @@
 clear
 date
 echo "TESTING WORKLOAD"
-operacion="halfhalf"
+operacion="trescuartos"
 workload="half.txt"
 db="espol"
 host="espol.host=127.0.0.1"
