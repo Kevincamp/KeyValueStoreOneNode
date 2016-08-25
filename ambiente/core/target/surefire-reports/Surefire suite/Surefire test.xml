@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite hostname="dimitri-H81M-H" name="com.yahoo.ycsb.TestByteIterator" tests="22" failures="0" timestamp="24 Aug 2016 01:51:27 GMT" time="0.501" errors="0">
+  <testcase name="testRandomByteIterator" time="0.005" classname="com.yahoo.ycsb.TestByteIterator"/>
+  <testcase name="bytesToDoubleTooShort" time="0.0" classname="com.yahoo.ycsb.TestUtils"/>
+  <testcase name="bytesToFromDouble" time="0.002" classname="com.yahoo.ycsb.TestUtils"/>
+  <testcase name="bytesToFromLong" time="0.0" classname="com.yahoo.ycsb.TestUtils"/>
+  <testcase name="bytesToLongNull" time="0.001" classname="com.yahoo.ycsb.TestUtils"/>
+  <testcase name="bytesToLongTooShort" time="0.0" classname="com.yahoo.ycsb.TestUtils"/>
+  <testcase name="jvmUtils" time="0.003" classname="com.yahoo.ycsb.TestUtils"/>
+  <testcase name="testIncrementPastIntegerMaxValue" time="0.364" classname="com.yahoo.ycsb.generator.AcknowledgedCounterGeneratorTest"/>
+  <testcase name="invalidCharacterSets" time="0.0" classname="com.yahoo.ycsb.generator.TestIncrementingPrintableStringGenerator"/>
+  <testcase name="invalidLengths" time="0.0" classname="com.yahoo.ycsb.generator.TestIncrementingPrintableStringGenerator"/>
+  <testcase name="rolloverException" time="0.0" classname="com.yahoo.ycsb.generator.TestIncrementingPrintableStringGenerator"/>
+  <testcase name="rolloverOK" time="0.0" classname="com.yahoo.ycsb.generator.TestIncrementingPrintableStringGenerator"/>
+  <testcase name="rolloverOneCharacterException" time="0.0" classname="com.yahoo.ycsb.generator.TestIncrementingPrintableStringGenerator"/>
+  <testcase name="rolloverOneCharacterOK" time="0.0" classname="com.yahoo.ycsb.generator.TestIncrementingPrintableStringGenerator"/>
+  <testcase name="ctorWithIntervalAndUnits" time="0.0" classname="com.yahoo.ycsb.generator.TestUnixEpochTimestampGenerator"/>
+  <testcase name="ctorWithIntervalAndUnitsAndStart" time="0.0" classname="com.yahoo.ycsb.generator.TestUnixEpochTimestampGenerator"/>
+  <testcase name="defaultCtor" time="0.001" classname="com.yahoo.ycsb.generator.TestUnixEpochTimestampGenerator"/>
+  <testcase name="variousIntervalsAndUnits" time="0.0" classname="com.yahoo.ycsb.generator.TestUnixEpochTimestampGenerator"/>
+  <testcase name="testMinAndMaxParameter" time="0.004" classname="com.yahoo.ycsb.generator.TestZipfianGenerator"/>
+  <testcase name="testJSONArrayMeasurementsExporter" time="0.111" classname="com.yahoo.ycsb.measurements.exporter.TestMeasurementsExporter"/>
+  <testcase name="createOperationChooser" time="0.003" classname="com.yahoo.ycsb.workloads.TestCoreWorkload"/>
+  <testcase name="createOperationChooserNullProperties" time="0.0" classname="com.yahoo.ycsb.workloads.TestCoreWorkload"/>
+</testsuite>
